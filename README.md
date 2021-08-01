@@ -1,6 +1,6 @@
 # 학습 정리
 
-###개발 환경
+### 개발 환경
 * nodeJS
 * IDE : webstorm
 * bundler : parcel
