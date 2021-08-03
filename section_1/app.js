@@ -6,7 +6,8 @@ const NEWS_URL = 'https://api.hnpwa.com/v0/news/1.json';
 const CONTENT_URL ='https://api.hnpwa.com/v0/item/@id.json';
 
 const store = {
-    currentPage: 1
+    currentPage: 1,
+    feeds: [],
 }
 
 const getData = url => { // api module
@@ -17,7 +18,7 @@ const getData = url => { // api module
 };
 
 const newsFeed = () => {
-    const newsFeed = getData(NEWS_URL);
+    let newsFeed = store.feeds;
     const newList = [];
     let template = `
      <div class="bg-gray-600 min-h-screen">
@@ -43,6 +44,17 @@ const newsFeed = () => {
       </div>
     </div>
     `;
+
+    function makeFeeds(feeds) {
+        for (let i = 0; i < feeds.length; i++) {
+            feeds[i].read = false;
+        }
+        return feeds;
+    }
+
+    if (newsFeed.length === 0) {
+        newsFeed = store.feeds = makeFeeds(getData(NEWS_URL));
+    }
 
     // newList.push('<ul>') // newList start
     for (let i = (store.currentPage - 1) * 10; i < store.currentPage * 10; i++) { // paging
@@ -81,7 +93,7 @@ const newsFeed = () => {
     template = template.replace('{{__next_page__}}', store.currentPage + 1);
 
     container.innerHTML = template;
-};;
+};
 
 const newsDetail = () => {
     const id = location.hash.substr(7);
@@ -108,12 +120,18 @@ const newsDetail = () => {
         <div class="text-gray-400 h-20">
           ${newsContent.content}
         </div>
-
+        
         {{__comments__}}
-
       </div>
     </div>
     `;
+
+    for (let i = 0; i < store.feeds.length; i++) {
+        if(store.feeds[i].id === Number(id)) {
+            store.feeds[i].read  = true;
+            break;
+        }
+    }
 
     container.innerHTML = template;
 

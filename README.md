@@ -18,4 +18,48 @@
 ### 라우터
 사용자가 노출될 화면 전환을 중계해준다.
 
+## 타입스크립트
+
+### 환경 설정 
+```json
+{
+    "compilerOptions": {
+      "strict": true,
+      "module": "commonjs",
+      "target": "es5",
+      "sourceMap": true,
+      "alwaysStrict": true,
+      "noImplicitAny": true
+    },
+    "exclude": [
+      "node_modules"
+    ]
+}
+```
+
+### type alias(타입 별칭)
+``` ts
+type Store = {
+  currentPage: number;
+  feeds: NewsFeed[];
+} 
+```
+
+
+### type와 interface는 타입결합 하는 방식이 틀리다.
+* 교차타입 사용때 유니언 타입(Union Types)을 사용합니다. 이럴때 interface 지원을 안하기 때문에 type을 사용합니다.
+
+```
+type NewsComment = News & {
+  comments: NewsComment[];
+  level: number;
+}
+
+interface NewsComment extends News {
+  comments: NewsComment[];
+  level: number;
+}
+```
+
+readonly 사용하면 값을 변경못하고 읽기만 가능하다.
 
