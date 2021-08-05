@@ -61,5 +61,11 @@ interface NewsComment extends News {
 }
 ```
 
-readonly 사용하면 값을 변경못하고 읽기만 가능하다.
+readonly : 사용하면 값을 변경못하고 읽기만 가능하다.
+
+### modules
+import/export 이용해서 캡슐화를 진행합니다.
+
+### 안전한 전역상태 관리
+> 모두가 가능한 전역상태는 전역 공간은 가능하면 쓰지않는 것이 좋습니다.
 
