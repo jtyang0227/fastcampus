@@ -69,3 +69,13 @@ import/export 이용해서 캡슐화를 진행합니다.
 ### 안전한 전역상태 관리
 > 모두가 가능한 전역상태는 전역 공간은 가능하면 쓰지않는 것이 좋습니다.
 
+### 비동기
+>Promise : 실행 코드가 완료될때까지 순차적으로 기달리는게 아니라, 다음 코드를 수행하는 것
+* 대기(pending): 이행하거나 거부되지 않은 초기 상태.
+* 이행(fulfilled): 연산이 성공적으로 완료됨.
+* 거부(rejected): 연산이 실패함.
+
+![img.png](img.png)
+출처 : https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+async/await : axios를 사용하기 전에 Promise 숙지하고 사용하는걸 권장합니다.
