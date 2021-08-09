@@ -46,8 +46,8 @@ type Store = {
 ```
 
 
-### type와 interface는 타입결합 하는 방식이 틀리다.
-* 교차타입 사용때 유니언 타입(Union Types)을 사용합니다. 이럴때 interface 지원을 안하기 때문에 type을 사용합니다.
+### type, interface 타입결합 하는 방식이 틀리다.
+* 교차타입 사용때 유니언 타입(Union Types)을 사용합니다. 이럴때 interface 지원을 안하기 때문에 type 사용합니다.
 
 ```
 type NewsComment = News & {
@@ -78,4 +78,62 @@ import/export 이용해서 캡슐화를 진행합니다.
 ![img.png](img.png)
 출처 : https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-async/await : axios를 사용하기 전에 Promise 숙지하고 사용하는걸 권장합니다.
+async/await : axios 사용하기 전에 Promise 숙지하고 사용하는걸 권장합니다.
+
+---
+# Basics
+### TypeScript 자료형
+* Boolean (불리언)
+* Number
+* String
+* Array
+* Tuple (튜플)
+* Enum (열거)
+* Any
+* Void
+* Null and Undefined
+* Never
+* Object (객체)
+
+### javascript, typescript 비교
+> 사용자가 사용하는 "런타임"아닌 개발자가 "컴파일 타임"시점에 타입을 확인하는 것, 타입스크립트의 장점입니다.
+
+```javascript
+// javascript
+function addAge(age) {
+  return age + 1;
+}
+
+let age = addAge('30');
+
+console.log(age); // 301
+```
+
+```typescript
+// typescript
+function addAge(age: number): number {
+  return age + 1;
+}
+
+let age: number = addAge('30'); // type error
+
+console.log(age);
+```
+
+### 비교연산자
+```javascript
+if(a == b) {}; // 동등연산자, 추상적(abstract)
+if(a === b) {}; // 일치연산자, 엄격한(strict)
+```
+### ES6 문법
+```javascript
+// 구조분해 할당
+const colors = ['red', 'yellow', 'back'];
+const colorsObj = {
+  blue: 'blue',
+  green: 'green',
+  white: 'white'
+}
+const [red, yellow, black] = colors;
+const { green, blue } = colorsObj;
+```
