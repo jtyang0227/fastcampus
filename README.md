@@ -498,6 +498,140 @@ function sumNumbersForTypeScript(...ages: number[]): number {
 console.log(sumNumbersForTypeScript(100, 20, 1)) // 121
 ```
 ---
+### _20_
+#### Tuple (튜플)
 
+```typescript
+// 배열안에 각각 원소(인자)의 타입을 규정한 테이터 타입
+const address: [number, string, string] = [123, '서울시', '송파구'];
 
+type BookInfo = [string, string, number];
 
+const BooksData: BookInfo[] = [
+  ['루피', '원피스', 1000],
+  ['루피', '원피스', 1000]
+];
+
+BooksData.push([1, 'B', 30]); // 1번째 인자는 type error
+
+type Address = [number, string, string];
+function getArray(): Address {
+  return [123, '서울', '송파구'];
+}
+```
+### _21_
+#### class
+> 객체를 정교하게 생성하는 방식, ES6 이후 클래스 문법이 추가됬습니다.
+
+```typescript
+interface Container {
+  tagName: string;
+  className: string;
+  children?: string[];
+  getTageName: () => string;
+  getClassName: () => string;
+}
+
+// 상위 클래스
+class Shape {
+  // static : 정적 데이터
+  public static MIN_WIDTH = 0;
+  public static MAX_WIDTH = 100;
+
+  // readonly : 읽기만 가능, 외부에서 변경 불가
+  public readonly name: string = 'Shape';
+  
+  // protected : class안에 자식 클래스까지만 허용니다.
+  protected _borderWidth: string;
+  
+  // private : 클래스(Shape)에서만 허용합니다.
+  private action: string;
+
+  constructor(borderWidth: number = 0) {
+    this._borderWidth = borderWidth;
+  }
+
+  // abstract : 추상 클래스, 현재는 클래스는 정의만 되있습니다.
+  abstract area: () => number;
+
+  set borderWidth(width: number) {
+    if (width >= Shape.MIN_WIDTH && width <= Shape.MAX_WIDTH) {
+      this._borderWidth = width;
+    } else {
+      throw new Error('실패!');
+    }
+  }
+
+  get borderWidth(): number {
+    return this._borderWidth;
+  }
+}
+
+// 하위 클래스
+class Circle extends Shape { // 상속
+  // private : 내부의 값은 보호합니다.
+  private _radius: number;
+  // 부모의 값을 재정의 가능합니다. (override)
+  public readonly name: string = 'Circle';
+
+  constructor(radius: number) {
+    super(); // Shape(부모 호출) 초기화합니다.
+    this._radius = radius;
+  }
+
+  get radius() {
+    return this._radius;
+  }
+
+  // 부모에 선언한 추상 클래스의 실제 구현부입니다.
+  area = () => this._radius * this._radius * Math.PI;
+}
+
+// 하위 클래스
+class Rect extends Shape {
+  private _width: number;
+  private _heigth: number;
+  public readonly name: string = 'Rect';
+
+  constructor(width: number, height) {
+    super(); // Shape(부모 호출) 초기화합니다.
+
+    this._width = widths;
+    this._heigth = height;
+  }
+
+  get width() {
+    return this._width;
+  }
+
+  get height() {
+    return this._heigth;
+  }
+
+  // 부모에 선언한 추상 클래스의 실제 구현부입니다.
+  area = () => this._width * this._heigth;
+}
+
+const circle = new Circle(100);
+const rect = new Rect(200, 100);
+
+// 인터페이스를 이용해서 제공되면, 클래스 만드는 걸 도와줍니다.
+// public만을 제공합니다. 참고로 private, protected 제공되지않고 class에서만 제공됩니다.
+class MyContainer implements Container {
+  tagName: string;
+  className: string;
+
+  constructor(tageName: string, className: string) {
+    this.tagName = tageName;
+    this.className = className;
+  }
+  
+  getTageName = () => this.tagName;
+  getClassName = () => this.className;
+}
+```
+### _22_
+#### instance (인스턴스)
+```typescript
+
+```
