@@ -632,6 +632,171 @@ class MyContainer implements Container {
 ```
 ### _22_
 #### instance (인스턴스)
+> 함수로 인스턴스 객체 생성이 가능합니다,하지만 인스턴스 객체를 생성하는 것이 가독성이나 편의성 클래스를 권장합니다.
 ```typescript
+// function 문법
+function CartV1() { // 함수이지만 CartV1 맨 앞글자 대문자로해서 new 생성하도록 유도합니다.
+  this.cart = [];
+  this.currentId = 0;
+}
 
+CartV1.createItem = function (name: string, price: number) {
+  return {
+    name, price
+  };
+};
+
+CartV1.prototype.getNewId = function () {
+  this.currentId++;
+  return this.currentId;
+}
+
+CartV1.prototype.addItem = function (item) {
+  this.cart.push({
+    ...item,
+    id: this.getNewId(),
+  })
+}
+
+CartV1.prototype.clearCart = function () {
+  this.cart = [];
+  this.currentId = 0;
+}
+const shoppingCarV1 = new CartV1();
+shoppingCarV1.addItem(CartV1.createItem("수박", 2000))
+
+// class 문법
+class CartV2 {
+  // static :  정적 메소드
+  static createItem = (name: string, price: number) => {(
+      name, price
+    )
+  };
+
+  cart;
+  currentId;
+  
+  constructor() {
+    this.cart = [];
+    this.currentId = 0;
+  }
+  
+  getNewId = () => {
+    this.currentId++;
+    return this.currentId;
+  }
+  
+  addItem = item => {
+    this.cart.push({})
+      ...item,
+      id: this.getNewId(),
+  }
+  
+  clearCart = () => {
+    this.currentId = 0;
+    this.cart = [];
+  }
+}
+
+const shoppingCarV2 = new CartV2();
+
+shoppingCarV2.addItem(CartV2.createItem('바나나', 1000))
 ```
+### _23_
+#### prototypes (프로토타입)
+```typescript
+function Foo(name: string) {
+  this.name = name;
+  this.__proto__ = Foo.prototype;
+}
+
+// 객체(Foo)의 상속관계에 상속된 객체를 추가합니다.
+Foo.prototype.lastName = 'wow';
+
+const f = new Foo('jetty');
+console.log(f.name); // output : 'jetty'
+console.log(f.lastName) // output : 'wow'
+```
+### _24_
+#### Context (컨텍스트)
+* Execution Context (실행 컨텍스트) 기본 컨텍스트입니다. // Execution : 호출
+
+```typescript
+const person = {
+  name: 'jetty yang'
+  age: 100,
+
+  getAge() {
+    return this.age;
+  }
+};
+
+person.age;
+person.getAge(); // this(person) 확인되었습니다. output : 100
+
+const age = person.getAge;
+
+// age(); // this의 아무것도 확인 안되므로, 접글 불가
+
+// 메소드 2가지 방식으로 this(주최)를 호출합니다.
+age.call(person);
+age.apply(person);
+
+class Person {
+  name: string;
+  age: number;
+
+  constructor(name: string, age: number) {
+    this.name = nmae;
+    this.age = age;
+
+    // bind 고정적으로 this 할당해줍니다.
+    this.getAge = this.getAge.bind(this);
+  }
+  
+  getAge() {
+    return this.age;
+  }
+  
+  // arrow function으로 고정값 줍니다.
+  getName = () => this.name;
+};
+
+const p1 = new Person('jtYang', 200);
+p1.getAge();
+
+const myAge = p1.getAge;
+// myAge.call(p1);
+myAge(); // bind 인해 call() 사용안해도 됩니다.
+
+// arrow function
+p1.getName();
+```
+### _25_
+#### Closure (클로저)
+> 함수 안쪽에서 함수를 생성해서 반환시점에 데이터 공간(Closure)에 값을 저장합니다.
+##### 장점
+* 함수가 전달(리턴)돼도 특정 값을 보호하면서 값을 사용합니다.
+* 바깥공간에서 saveNumber 접글할 방법이 없습니다.
+* javascipt에서는 값을 보호하는 방식으로 사용합니다. 그렇지만 typescipt에서는 class안에서 private 접근 제한자를 사용하면 끝.
+```typescript
+function increment() {
+  let saveNumber = 1; // local 값은 반환시점에 없어집니다.
+  
+  // 함수로 값을 반환하는 방식
+  return function () {
+    return saveNumber++;
+  };
+}
+
+const inc = increment();
+
+console.log(inc()); // output : 1
+console.log(inc()); // output : 2
+
+class myOjb {
+  private saveNumber: Number;
+}
+```
+### _26_
+#### Generic (제너릭)
