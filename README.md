@@ -800,3 +800,197 @@ class myOjb {
 ```
 ### _26_
 #### Generic (제너릭)
+
+```typescript
+type User = {
+  id: string;
+  name: string;
+}
+
+type Address = {
+  zipcode: number;
+  address: string;
+}
+
+function plpeOne(value: any): any {
+  return value;
+}
+
+let p1 = plpeOne(10); // output : 1 (type : number)
+
+function plpeTwo<T>(value: T): T {
+  return value;
+}
+
+// input type인해 type 추론을 됩니다.
+let p2 = plpeTwo('10'); // output : 1 (type : string) 
+
+const plpeObjectOne = <T>(obj: T): T => {
+  return obj;
+}
+
+let po1 = plpeObjectOne({id: 1, name: '루피', zipcode: 1111});
+
+// User type으로 타입(제너릭) 확정합니다.
+let po2 = plpeObjectOne<User>({id: 1, name: '루피', zipcode: 1111});
+
+
+// 1. 클래스 이용 방식
+class State<S, Config={}> {
+  private _state: S;
+  config: Config;
+
+  constructor(state: S, config: Config) {
+    this._state = state;
+    this.config = config;
+  }
+  
+  getState(): S {
+    return this._state;
+  }
+}
+
+let s1 = new State<Address, { active: boolean}>({
+  // 1번째 인자
+  zipcode: 1000,
+  address: '서울시',
+}, {
+  // 2번째 인자
+  active: true
+});
+
+const s1Data = s1.getState();
+
+// s1Data. 만 작성하면 zipcode OR address를 추론해서 자동완성기로 제공해줍니다.
+console.log(s1Data.zipcode, s1Data.address);
+
+function getProperty<T, K extends keyof T>(obj: T, key: K) {
+  return obj[key];
+}
+
+let x = {a: 1, b: 2, c: 3};
+getProperty(x, 'a');
+getProperty(x, 'm'); // K(key)값에 'm' 없으므로 error입니다. 
+
+// 2. 인터페이스 이용 방법
+interface KeyPair<T, U> {
+  key: T;
+  value: U;
+}
+// KeyPair의 타입을 직접 확정합니다.
+let kv1 = KeyPair<number, string> = {key: 1, value: 'yang'};
+let kv2 = KeyPair<number, number> = {key: 1, value: 9999};
+```
+### _27_
+#### type guard (타입 가드)
+```typescript
+function duubleTypeFunction(a: number | string) {
+  if (typeof a === 'string') {
+    return a.replace('a', "X");
+  }
+  
+  return a.replace('Y', 'y'); // error
+}
+
+function fooGuard(a: number | null) {
+  if (a === null) return;
+  
+  console.log(a?.valueOf());
+}
+interface Foo {
+  foo: string;
+  common: string;
+}
+// 도움 함수(헬퍼 함수)
+function isFoo(arg: any): arg is Foo {
+  return arg foo !== undefined;
+}
+
+console.log(isFoo({
+  foo: 'OK',
+  common: 'wow',
+  active: false
+}))
+```
+### _28_
+#### @types
+> uuid 기본적 typescript 제공하지 않는다. 그래서 해결방법은 @types/uuid
+> 만약에 라이브러리가 typescript 안하는 경우에는 **@types** 이용하면 쉽게 제공 받을 수 있습니다.
+```typescript
+// uuid 
+// npm install uuid 
+// npm install @types/uuid
+import { v4 } from 'uuid';
+type UniqObj = {
+  id: string;
+  [key: string]: string | number | boolean;
+}
+const makeObj = (): UniqObj => ({
+  id: 999
+});
+
+console.log(makeObj()); // 999
+```
+### _29_
+#### JSON (JavaScript Object Notation)
+> 비동기 브라우저/서버 통신 (AJAX)을 위해, 넓게는 XML(AJAX가 사용)을 대체하는 주요 데이터 포맷이다
+```typescript
+const jsonString =  `
+    {
+      "name": 'jetty',
+      "age": 123,
+      "address": "b"
+    }
+`;
+try {
+  const myJson = JSON.parse(jsonString);
+  console.log(myJson);
+  console.log(JSON.stringify(jsonString));
+} catch (e) {
+  console.log("error")
+}
+```
+### _30_
+#### Scope (스코프)
+> 함수(블록)을 진입할 때  생성
+* 전역 스코프
+* 함수(지역) 스코프
+* 블록 스코프
+```typescript
+let myName = 'yang';
+
+function myFoo() {
+  let x = 10;
+  
+  console.log(myName) // output : 'yang'
+  console.log(x);
+  
+  bar(); // 호이스팅 : 스코프안에 미리 만들어져 있어서 밑에 bar()가 있어도 호출이 가능합니다.
+  zoo(); // 함수식이라 호출 안됩니다.
+  
+  // 함수문
+  function bar() {
+    let y = 100;
+    
+    console.log(x); output : 10
+    console.log(myName); // output : 'yang'
+  }
+  
+  // 함수식
+  const zoo = function () {
+    alert('zoo');
+  }
+  
+  if (x === 10) {
+    let x = 1;
+    
+    console.log(x); // 1
+  }
+  
+  console.log(y) // error
+  bar();
+}
+
+myFoo();
+console.log(x); // error
+```
