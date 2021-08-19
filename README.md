@@ -994,3 +994,170 @@ function myFoo() {
 myFoo();
 console.log(x); // error
 ```
+---
+### _31_
+#### 동기, 비동기
+```typescript
+function double(x) {
+  retrun x * 2;
+}
+
+const x = double(100);
+const y = x;
+
+// 2
+function calcValue() {
+  setTimeout(() => {
+    return a + b;
+  }, 100);
+}
+
+// 3
+const r = calcValue(10, 20, (result) => {
+  console.log(result); // output : 30
+});
+
+// 1
+const z = r; 
+
+// Promise 사용 방식
+const promise = new Promise((resolve, reject) => {
+  // 성공
+  // resolve('OK');
+  setTimeout(() => {
+    resolve('OK');
+  }, 2000)
+  
+  //실패 
+  // reject('fail');
+  setTimeout(() => {
+    reject('실패');
+  }, 1000)
+});
+
+promise.then(function (ok) {
+  console.log("1번쨰 성공");
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+          resolve('2번째 성공');
+        }, 2000)
+    })
+  })
+  .then(function (ok) {
+    console.log(ok);
+  })
+  .catch(function (error) {
+    console.log(error); // output : fail
+  })
+```
+### _32_
+#### DOM (Document Object Model)
+> DOM을 사용하는거는 지향하지 않는 방향이다, 그리고 현재 프레임워크, 라이브러리 사용하는 React.js, vue.js에서는 DO을 일체 접근하지 못하는 형태를 취하고 있습니다.
+* 작은 애플리케이션이 아닌 규모가 있는 애플리케이션을 만든다고 하면 DOM을 직접 조작하는 행위는 권장하지 않는다.
+
+### _34_
+#### 런타임, 컴파일 타임
+> javascript로 개발하면 런타임, 컴파일 타입 구분없이 브라우저 랜더링으로 실행됩니다. 하지만 typescript는 런타임, 컴파일 타입 구분 됩니다.
+```typescript
+function add(x: number, y: number) {
+    return x + y;
+}
+
+type ObjType = {
+    x: number;
+    y: number;
+}
+
+const json = `{"x": "ABC", "y":20}`;
+const jsonObj: ObjType = JSON.parse(json) as ObjType;
+
+// 런타임 시점에 체크하는 방어로직을 필요하다.
+add(jsonObj.x, jsonObj.y);
+```
+### _35_
+#### Web API
+##### 브라우저 저장소
+1. Window.localStorage : 저장한 데이터는 브라우저 세션 간에 공유됩니다
+2. Window.sessionStorage : 데이터는 페이지 세션이 끝날 때 제거됩니다
+3. History API : 브라우저의 세션 기록에 접근할 수 있는 방법입니다
+4. Clipboard API : 잘라내기, 복사, 붙여넣기 같은 응답할 수 있는 기능합니다
+5. Canvas API : 엘리먼트를 통해 그래픽을 그리기위한 수단을 제공합니다
+
+URL : https://developer.mozilla.org/ko/docs/Web/API
+
+### _36_
+#### polyfill (폴리필)
+>  웹 개발에서 기능을 지원하지 않는 웹 브라우저 상의 기능을 구현하는 코드를 뜻한다.
+* 라이브러리로는 core-js를 Babel.js 내부에 탑재되서 최신 코드을 이용해서 사용됩니다.
+
+### _37_
+#### 순환 연산, n개의 연산
+```javascript
+const arr2 = [1, 2 , 3, 4]
+  .map(n => n * 3)
+  .filter(n => n & 2 !== 0)
+  .map(n => `<li>${n}</li>`);
+
+console.log(arr2);
+```
+### _38_
+#### protocol (프로토콜)
+> 소프트웨어의 규격을 만들어 놓고, 규격 안에서 함수, 클래스를 동작을 만들고 디자인하는 것.
+
+### _39_
+#### 이터레이션, 이터러블
+```javascript
+const myIterable = {};
+
+// Symbol : 유일한(유니크값) 생성하는 기본 값
+myIterable[Symbol.iterator] = function* () {
+  let i = 1;
+  
+  while (i <= 100) {
+    yield i++;
+  }
+  
+  for (const n of myIterable) {
+    console.log(n); // output : 1 2 3 4...
+  }
+}
+```
+
+### _40_
+#### 형태의 변환 (객체를 문자열로 변환하기)
+```javascript
+// 1
+const cartItems = [
+  {id: 1, item: '원피스', price: 20000, discount: 0 },
+  {id: 2, item: '루피', price: 10000, discount: 0 },
+  {id: 3, item: '조로', price: 5000, discount: 0 },
+  {id: 4, item: '상디', price: 7000, discount: 0 },
+]
+
+const cartItemArray = [];
+
+for (const item for cartItems) {
+  const row = [];
+  
+  // Object.entrie : ['id', 1]
+  for (const [, value] of Object.entries(item)) {
+    row.push(value);
+  }
+  
+  cartItemArray.push(row.join());
+}
+console.log(cartItemArray.join('==='));
+
+// 2 배열 연산
+const valueOfObject = obj => Object
+  .entries(obj)
+  .map(([, value]) => String(value));
+
+const cartItemString = cartItems
+  .map(valueOfObject)
+  .join('===')
+
+console.log(cartItemString);
+```
+### _41_
+#### 형태의 변환 (문자열을 형태가 다른 문자열로 변환하기)
