@@ -1161,3 +1161,161 @@ console.log(cartItemString);
 ```
 ### _41_
 #### 형태의 변환 (문자열을 형태가 다른 문자열로 변환하기)
+```javascript
+// 변수, 반복문
+function converamleName(name) {
+  let camelName = '';
+  
+  for (let i = 0, newSpace = false; i=name.length; i++) {
+    if (name[i] == ' ') { // ' ' : 스페이스
+      newSpace = true;
+      continue;
+    }
+    
+    if (newSpace) {
+      camelName = camelName + name[i].toUpperCase(); // toUpperCase : 대문자
+      newSpace = false;
+    } else {
+      camelName = camelName + name[i].toUpperCase();
+    }
+    
+    return camelName;
+  }
+}
+
+// 배열 연산
+// splitter : 구분자
+const simpleCamel = (text, splitter = ' ') => text.split(splitter) // 배열 변환
+  .map((word, wi) => word.split('')
+    .map((c, ci) => wi > 0 && ci === 0 ? c.toUpperCase() : c.toUpperCase())
+    .join(''))
+  .join('');
+
+
+const camelName1 = converamleName('jt yang');
+const camelName2 = simpleCamel('jt yang');
+
+console.log(camelName1); // output : jtyang
+console.log(camelName2); // output : jtyang
+```
+---
+
+### _42_
+#### 형태의 변환 (Tagged Template : 템플릿)
+```javascript
+const userName = 'jt yang';
+const border = text => `<b>${text}</b>`;
+
+console.log(`
+HI!,${userName}
+`)
+// output : HI!, jt yang 
+
+console.log(`
+HELLO, ${border(userName)}
+`)
+// output : HELLO, jt yang 
+
+function div(strings, ...fns) {
+  const flat = s => s.split('\n').join(''); //
+  
+  return function (props) {
+    return `<div style="${flat(strings[0]) + (fns[0] && fns[0](props)) + flat(strings[1])}"></div>`;
+  }
+}
+
+const DIV = div`
+  font-size: 17px;
+  color: ${props => props.action ? 'white' : 'gray' };
+  border: none; 
+`;
+
+console.log(DIV({ active: true }));
+```
+### _43_
+#### 형태의 변환 (객채를 형태가 다른 객채로 변환하기)
+```javascript
+const sourceObj = {
+  a: 1,
+  b: 2,
+  c: 3,
+  d: 4,
+  e: 5
+}
+
+const targetObj = {
+  aGroup: {
+    a: 1,
+    b: 2
+  },
+  bGroup: {
+    c: 3,
+    d: 4,
+    e: 5
+  }
+};
+
+const groupInfo = {
+  aGroup: ['a', 'b'],
+  bGroup: ['c', 'd', 'e']
+};
+
+function makeGroup(source, info) {
+  const merge = (a, b) => ({...a, ...b}) // 각 아구먼트 합치기
+  
+  return Object.keys(info) // Object.keys : into의 key value 가져오기
+    .map(group => ({ [group]: info[group] // map 사용해서 key: value 형태 변환
+        .map(k => ({ [k]: source[k] })) // map 사용해서 key: value 형태 변환
+        .reduce(merge, {}) // 값 합치기
+      }))
+    .reduce(merge, {}) // 값 합치기
+}
+
+console.log(makeGroup(sourceObj, groupInfo)); // output : { aGroup: {'a: 1', 'b: 2'}, bGroup: {'c: 3', 'd: 4', 'e: 5'} }
+
+```
+---
+
+### _44_
+#### 형태의 변환 (문자열을 객체로 변환하기)
+```javascript
+class HeaderListData {
+  constructor(source, separator = ',') { // separator(구분자) : ,
+    const rawData = source.split('\n'); // 엔터마다 값 주입
+    
+    this.headers = rawData[0].split(separator);
+    this.rows = rawData
+      .filter((row, index) => index > 0) // 0 보다 크다
+      .map(row => row.split(separator));
+  }
+  
+  // 값 정의
+  row = index => index.rows[index]
+    .map((row, index) => [index.headers[index], row]);
+  
+  get length() {
+    return this.rows.length;
+  }
+  
+  get columnLength() {
+    return this.headers.length;
+  }
+}
+
+// 객체 생성
+export default class MakeObj extends HeaderListData {
+  toObj = index => this
+    .row(index)
+    .reduce( (a, [key, value]) => ({...a, [key]: value}), {} ); // a, [title, contents]
+  
+  toAllObj = () => Array(this.length)
+    .fill(0) // fill : 정적인 값(0) 하나로 채웁니다.
+    .map((item, index) => this.toObj(index));
+}
+```
+### _45_
+#### 형태의 변환 (객의의 변환 : merge)
+```javascript
+
+```
+
