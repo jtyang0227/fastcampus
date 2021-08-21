@@ -1316,6 +1316,94 @@ export default class MakeObj extends HeaderListData {
 ### _45_
 #### 형태의 변환 (객의의 변환 : merge)
 ```javascript
+const sourcObj = {
+  traits: {
+    fisrt_name {
+      value: 'jt',
+      age: 20
+    },
+    email_opened {
+      value: 'yang',
+      age: 33
+    }
+  },
+  cursor: {
+    url: '/v/abc/dsadas',
+    has_more: false,
+    next: ''
+  }
+}
+// 깊은 복사 : 문자열 > 객체 변환, 객체가 크면 성능 좋지 않습니다.
+const newObj1 = JSON.parse(JSON.stringify(sourcObj))
 
+// 얕은 복사
+const newObj2 = Object.assign({}, sourcObj);
+const newObj3 = { ...sourcObj };
+
+const DefaultStyle = {
+  color: '#fff',
+  fontSize: 14,
+  fontWeight: 200
+}
+
+function createParagraph(config) {
+  config = { ...DefaultStyle, ...config };
+  
+  console.log(config) // DefaultStyle에서 fontSize만 변경
+}
+createParagraph({ fontSize: 20} ); 
+```
+### _47_
+#### Webpack
+>  최신 JavaScript 애플리케이션을 위한 정적 모듈 번 들러 입니다 .
+* Entry
+```javascript
+module.exports = {
+  entry: './path/to/my/entry/file.js',
+};
+```
+* Output
+```javascript
+const path = require('path');
+
+module.exports = {
+  entry: './path/to/my/entry/file.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'my-first-webpack.bundle.js',
+  },
+};
+```
+* Loaders
+```javascript
+const path = require('path');
+
+module.exports = {
+  output: {
+    filename: 'my-first-webpack.bundle.js',
+  },
+  module: {
+    rules: [{ test: /\.txt$/, use: 'raw-loader' }],
+  },
+};
+```
+* Plugins
+```javascript
+const HtmlWebpackPlugin = require('html-webpack-plugin'); //installed via npm
+const webpack = require('webpack'); //to access built-in plugins
+
+module.exports = {
+  module: {
+    rules: [{ test: /\.txt$/, use: 'raw-loader' }],
+  },
+  plugins: [new HtmlWebpackPlugin({ template: './src/index.html' })],
+};
 ```
 
+URL : https://webpack.js.org/
+* 학습용으로는 webpack boilerplate 검색하고서 webpack.config.js 설정
+
+### _51_
+#### Handlebars
+> 템플릿(Mustache) 엔진, {{ 콧수염 }} 더블 브레이스
+* https://handlebarsjs.com/
